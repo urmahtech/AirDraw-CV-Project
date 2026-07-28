@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+*.pyc
+saved_drawings/
+.DS_Store
+assets/
