@@ -55,6 +55,9 @@ def main():
             fingers = tracker.fingers_up(landmarks)
             gesture = tracker.get_gesture(fingers)
 
+            # Day 2 Task 6: Print detected gesture to the console.
+            print(f"Gesture: {gesture}")
+
             index_x, index_y = landmarks[8][1], landmarks[8][2]
             middle_x, middle_y = landmarks[12][1], landmarks[12][2]
 
@@ -69,31 +72,30 @@ def main():
                 clear_hold_counter = 0
 
             elif gesture == config.GESTURE_DRAW:
-                # Exponential smoothing on the raw landmark point: without
-                # this the line is visibly shaky frame-to-frame because raw
-                # landmark detections jitter by a few pixels even when the
-                # hand is perfectly still. Higher config.SMOOTHENING = less
-                # jitter but a touch more lag, matching the comment in
-                # config.py.
+                # Exponential smoothing on the raw landmark point.
                 if smooth_x is None:
                     smooth_x, smooth_y = index_x, index_y
                 else:
                     smooth_x += (index_x - smooth_x) / config.SMOOTHENING
                     smooth_y += (index_y - smooth_y) / config.SMOOTHENING
+
                 draw_x, draw_y = int(smooth_x), int(smooth_y)
 
                 cv2.circle(frame, (draw_x, draw_y), 8, canvas.current_color, -1)
-                if draw_y > config.TOOLBAR_HEIGHT:  # don't draw over the toolbar
+
+                if draw_y > config.TOOLBAR_HEIGHT:
                     canvas.draw_line(draw_x, draw_y)
                 else:
                     canvas.reset_stroke()
                     smooth_x, smooth_y = None, None
+
                 clear_hold_counter = 0
 
             elif gesture == config.GESTURE_CLEAR:
                 clear_hold_counter += 1
                 canvas.reset_stroke()
                 smooth_x, smooth_y = None, None
+
                 if clear_hold_counter >= config.CLEAR_HOLD_FRAMES:
                     canvas.clear()
                     clear_hold_counter = 0
@@ -102,6 +104,7 @@ def main():
                 canvas.reset_stroke()
                 smooth_x, smooth_y = None, None
                 clear_hold_counter = 0
+
         else:
             canvas.reset_stroke()
             smooth_x, smooth_y = None, None
@@ -109,17 +112,25 @@ def main():
 
         output = canvas.merge_with_frame(frame)
 
-        cv2.putText(output, f"Tool: {canvas.current_tool_name}",
-                    (10, h - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+        cv2.putText(
+            output,
+            f"Tool: {canvas.current_tool_name}",
+            (10, h - 20),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.7,
+            (255, 255, 255),
+            2,
+        )
 
         cv2.imshow("AirDraw - Press Q to quit", output)
 
         key = cv2.waitKey(1) & 0xFF
-        if key == ord('q'):
+
+        if key == ord("q"):
             break
-        elif key == ord('c'):
+        elif key == ord("c"):
             canvas.clear()
-        elif key == ord('s'):
+        elif key == ord("s"):
             path = canvas.save()
             print(f"Drawing saved to: {path}")
 

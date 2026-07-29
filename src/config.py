@@ -6,29 +6,33 @@ All tunable constants live here so the rest of the codebase stays clean.
 """
 
 # ---------------------------------------------------------------------------
-# Camera / Window settings
+# Camera / Window Settings
 # ---------------------------------------------------------------------------
 CAM_WIDTH = 1280
 CAM_HEIGHT = 720
 CAM_INDEX = 0
-FLIP_CAMERA = True  # mirror the feed so it feels natural to draw
+FLIP_CAMERA = True  # Mirror the webcam feed for a natural drawing experience
 
 # ---------------------------------------------------------------------------
-# MediaPipe Hands settings
+# MediaPipe Hand Detection Settings
 # ---------------------------------------------------------------------------
 MAX_NUM_HANDS = 1
 DETECTION_CONFIDENCE = 0.75
 TRACKING_CONFIDENCE = 0.75
 
 # ---------------------------------------------------------------------------
-# Drawing settings
+# Drawing Settings
+# (These will be used in Day 3 when the drawing canvas is added.)
 # ---------------------------------------------------------------------------
 BRUSH_THICKNESS = 8
 ERASER_THICKNESS = 60
-SMOOTHENING = 5          # higher = smoother but slightly laggier strokes
+SMOOTHENING = 5          # Higher value = smoother but slightly slower strokes
 CANVAS_SAVE_DIR = "saved_drawings"
 
-# Color palette shown on the top toolbar: (name, BGR color)
+# ---------------------------------------------------------------------------
+# Color Palette
+# Colors are stored in BGR format because OpenCV uses BGR instead of RGB.
+# ---------------------------------------------------------------------------
 COLOR_PALETTE = [
     ("Red",    (0, 0, 255)),
     ("Green",  (0, 255, 0)),
@@ -39,23 +43,25 @@ COLOR_PALETTE = [
     ("Eraser", (0, 0, 0)),
 ]
 
-TOOLBAR_HEIGHT = 100
+# ---------------------------------------------------------------------------
+# UI / Gesture Timing Settings
+# ---------------------------------------------------------------------------
+# Reserved height (in pixels) for the toolbar that will be added in Day 3.
+TOOLBAR_HEIGHT = 80
+
+# Margin around toolbar buttons.
 TOOLBAR_BOX_MARGIN = 20
 
-# ---------------------------------------------------------------------------
-# Gesture -> Action mapping
-# ---------------------------------------------------------------------------
-# These are the finger-state patterns (thumb, index, middle, ring, pinky)
-# where 1 = extended, 0 = folded. This lightweight finger-counting logic
-# drives the app in real time using MediaPipe landmarks.
-#
-# For a heavier, dataset-trained gesture classifier (e.g. trained on the
-# HaGRID dataset: https://github.com/hukenovs/hagrid), see
-# src/hagrid_classifier.py and docs/hagrid_integration.md
-GESTURE_DRAW = "draw"          # index finger only up -> draw
-GESTURE_SELECT = "select"      # index + middle up -> hover/select on toolbar
-GESTURE_ERASE = "erase"        # fist (all folded) -> erase mode
-GESTURE_CLEAR = "clear"        # all five fingers up (open palm) -> clear canvas
-GESTURE_IDLE = "idle"          # anything else -> do nothing
+# Number of consecutive frames the "clear" gesture must be held
+# before the application clears the canvas.
+CLEAR_HOLD_FRAMES = 30
 
-CLEAR_HOLD_FRAMES = 25  # frames the open-palm gesture must be held to trigger clear
+# ---------------------------------------------------------------------------
+# Gesture Constants
+# These gesture names are returned by HandTracker.get_gesture().
+# ---------------------------------------------------------------------------
+GESTURE_DRAW = "draw"        # Index finger only
+GESTURE_SELECT = "select"    # Index + Middle fingers
+GESTURE_ERASE = "erase"      # Closed fist
+GESTURE_CLEAR = "clear"      # Open palm (all five fingers)
+GESTURE_IDLE = "idle"        # Any other hand pose
