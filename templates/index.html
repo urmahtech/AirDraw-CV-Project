@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirDraw - Hand Tracking Drawing App</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:#111;
+            color:white;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+        }
+
+        .container{
+            text-align:center;
+            width:80%;
+            max-width:900px;
+        }
+
+        h1{
+            font-size:48px;
+            color:#00ff99;
+            margin-bottom:20px;
+        }
+
+        p{
+            font-size:20px;
+            color:#dddddd;
+            margin-bottom:15px;
+            line-height:1.6;
+        }
+
+        button{
+            margin-top:30px;
+            padding:15px 40px;
+            font-size:20px;
+            border:none;
+            border-radius:8px;
+            background:#00ff99;
+            color:black;
+            cursor:pointer;
+            transition:0.3s;
+            font-weight:bold;
+        }
+
+        button:hover{
+            background:#00cc77;
+            transform:scale(1.05);
+        }
+
+        .info{
+            margin-top:50px;
+            text-align:left;
+            background:#1c1c1c;
+            padding:25px;
+            border-radius:10px;
+        }
+
+        .info h2{
+            color:#00ff99;
+            margin-bottom:15px;
+        }
+
+        .info ul{
+            padding-left:20px;
+        }
+
+        .info li{
+            margin:10px 0;
+            font-size:18px;
+        }
+
+        #status{
+            margin-top:20px;
+            font-size:18px;
+            color:#00ff99;
+            font-weight:bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Welcome to AirDraw</h1>
+
+    <p>
+        Draw in the air using your hand and webcam with
+        MediaPipe Hand Tracking and OpenCV.
+    </p>
+
+    <button onclick="startAirDraw()">
+        Start AirDraw
+    </button>
+
+    <div id="status"></div>
+
+    <div class="info">
+        <h2>Features</h2>
+
+        <ul>
+            <li>Draw using your index finger.</li>
+            <li>Select colors with hand gestures.</li>
+            <li>Clear the canvas using an open palm gesture.</li>
+            <li>Save your drawings.</li>
+            <li>Built using Python, OpenCV, MediaPipe and Flask.</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+
+function startAirDraw(){
+
+    document.getElementById("status").innerHTML =
+    "Starting AirDraw... Please wait.";
+
+    fetch("/start")
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById("status").innerHTML = data;
+    })
+    .catch(error => {
+        document.getElementById("status").innerHTML =
+        "Error starting AirDraw.";
+    });
+
+}
+
+</script>
+
+</body>
+</html>
