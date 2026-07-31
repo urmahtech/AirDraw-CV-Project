@@ -160,12 +160,7 @@ webrtc_streamer(
     },
     rtc_configuration={
         "iceServers": [
-            {"urls": ["stun:YOUR_STUN_SERVER"]},
-            {
-                "urls": ["turn:YOUR_TURN_SERVER"],
-                "username": "YOUR_USERNAME",
-                "credential": "YOUR_PASSWORD",
-            },
+            {"urls": ["stun:stun.l.google.com:19302"]}
         ]
     },
 )
