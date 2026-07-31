@@ -151,7 +151,6 @@ class AirDrawProcessor(VideoProcessorBase):
             output,
             format="bgr24",
         )
-
 webrtc_streamer(
     key="airdraw",
     video_processor_factory=AirDrawProcessor,
@@ -161,7 +160,12 @@ webrtc_streamer(
     },
     rtc_configuration={
         "iceServers": [
-            {"urls": ["stun:stun.l.google.com:19302"]}
+            {"urls": ["stun:YOUR_STUN_SERVER"]},
+            {
+                "urls": ["turn:YOUR_TURN_SERVER"],
+                "username": "YOUR_USERNAME",
+                "credential": "YOUR_PASSWORD",
+            },
         ]
     },
 )
