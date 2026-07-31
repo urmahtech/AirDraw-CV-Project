@@ -1,64 +1,21 @@
-from flask import Flask, render_template
+import streamlit as st
 import subprocess
 import sys
 
-app = Flask(__name__)
+st.set_page_config(
+    page_title="AirDraw",
+    page_icon="✍️",
+    layout="wide"
+)
 
+st.title("✍️ AirDraw")
+st.write("Draw in the air using your webcam and hand gestures.")
 
-@app.route("/")
-def home():
-    return render_template("index.html")
+if st.button("Start AirDraw"):
+    st.success("Starting AirDraw...")
 
-
-@app.route("/start")
-def start():
-    subprocess.Popen([sys.executable, "-m", "src.main"])
-
-    return """
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>AirDraw</title>
-        <style>
-            body{
-                background:#111;
-                color:white;
-                text-align:center;
-                font-family:Arial;
-                margin-top:100px;
-            }
-
-            h1{
-                color:#00ff99;
-            }
-
-            a{
-                color:#00ff99;
-                font-size:20px;
-                text-decoration:none;
-            }
-
-            a:hover{
-                text-decoration:underline;
-            }
-        </style>
-    </head>
-
-    <body>
-
-        <h1>AirDraw is starting...</h1>
-
-        <p>If the webcam window does not open within a few seconds,
-        check the VS Code terminal for any errors.</p>
-
-        <br>
-
-        <a href="/">← Back to Home</a>
-
-    </body>
-    </html>
-    """
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    try:
+        subprocess.Popen([sys.executable, "-m", "src.main"])
+        st.info("AirDraw has been launched. Check the webcam window.")
+    except Exception as e:
+        st.error(f"Error: {e}")
